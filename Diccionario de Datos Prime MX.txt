@@ -1,0 +1,175 @@
+## Prime MX · Knowledge-Base · YAML v1.0
+bdc_version: "v1.0"
+last_full_refresh: "2023-11-10"
+contact_owner: "dataops@primemx.com"
+
+DataDictionary:
+  - id: "modelo_primemx"
+    schema: "generic_lake"
+    description: "Modelo de datos de Prime MX"
+    tables:
+
+    #Tablas de Ventas
+      - id: "ventas"
+        description: "Registro histórico de las ventas realizadas por la fuerza de ventas de AT&T a través de tiendas Prime MX"
+        columns:
+          - { name: "fecha", type: "timestamp", description: "Fecha y hora en la que se realiza una venta" }
+          - { name: "anio", type: "int", description: "Año en el que se realiza la venta" }
+          - { name: "mes", type: "int", description: "Mes en el que se realiza la venta" }
+          - { name: "semana", type: "int", description: "Semana del Año en que se realiza la venta" }
+          - { name: "producto", type: "varchar", length: 50, description: "Producto que se vende (Prepago, Pospago, Renovacion, Seguros, Addons)" }
+          - { name: "region_prime", type: "varchar", length: 50, description: "Agrupación regional a la que pertenece la tienda en la que se realizó la venta" }
+          - { name: "id_tienda", type: "int", description: "Identificador único numérico de cada tienda" }
+          - { name: "clave_unica", type: "varchar", length: 20, description: "Identificador único alfanumérico de cada tienda, definido por AT&T" }
+          - { name: "tienda", type: "varchar", length: 120, description: "Tienda Prime en la que se realiza la venta" }
+          - { name: "vpgm", type: "varchar", length: 250, description: "Vice President and General Manager del área de ventas, solo hay una persona con este puesto en PrimeMX, le reportan directamente los Directores Regionales" }
+          - { name: "director_regional", type: "varchar", length: 250, description: "Director de la agrupación regional a la que pertenece la tienda en la que se realizó la venta, le reportan directamente los Gerentes Regionales" }
+          - { name: "gerente_regional", type: "varchar", length: 250, description: "Gerente de la agrupación regional a la que pertenece la tienda en la que se realizó la venta, le reportan directamente los Gerentes de Tienda" }
+          - { name: "gerente_tienda", type: "varchar", length: 250, description: "Gerente de la tienda Prime en donde se realizó la venta. Le reportan directamente los ejecutivos de ventas" }
+          - { name: "ejecutivo_ventas", type: "varchar", length: 250, description: "Ejecutivo de Ventas que realiza la venta" }
+          - { name: "es_comisionista", type: "int", description: "Bandera que indica, si es igual a 1, si la venta la está realizando una persona comisionista, fuera de la fuerza de ventas directa de Prime" }
+          - { name: "plan_tarifario", type: "varchar", length: 100, description: "Plan de Servicio elegido por el cliente, solo aplica para los productos Pospago y Renovación" }
+          - { name: "familia", type: "varchar", length: 100, description: "Tipo o conjunto de la oferta comercial a la que pertenece el plan tarifario" }
+          - { name: "es_pia", type: "int", description: "Indica si el tipo de plan tarifario es del tipo de pago por adelantado, en donde se paga anticipadamente el servicio y mes a mes se van dando los servicios y beneficios del plan (Paid in Advance)" }
+          - { name: "es_negocio", type: "int", description: "Indica si el plan tarifario es perteneciente a la oferta comercial para empresas" }
+          - { name: "costo_producto", type: "decimal(10,2)", description: "Precio del producto que se está vendiendo" }
+          - { name: "venta_equipo_nuevo", type: "int", description: "Bandera que indica, si es igual a 1, que en la venta, el cliente está comprando un teléfono nuevo además de un plan tarifario" }
+          - { name: "marca_equipo", type: "varchar", length: 100, description: "Marca del equipo nuevo adquirido" }
+          - { name: "modelo_equipo", type: "varchar", length: 250, description: "Modelo del equipo nuevo adquirido" }
+          - { name: "tier", type: "varchar", length: 100, description: "Nivel de costo o gama del equipo nuevo adquirido (FLAGSHIP, HIGH, MID, LOW)" }
+          - { name: "plazo_forzoso", type: "int", description: "Número de meses a los que el cliente se obliga a tener contratado el plan tarifario, cuando se adquiere, junto con el plan tarifario, un equipo nuevo. En cada mes se cobrará el costo del equipo adquirido" }
+          - { name: "comision", type: "decimal(10,2)", description: "Valor monetario de la comisión que se le paga al ejecutivo que realizó la venta" }
+          - { name: "incentivo", type: "decimal(10,2)", description: "Valor monetario del incentivo generado por la venta realizada, estos incentivos, por lo general lo dan las diferentes marcas de equipos" }
+          - { name: "total_pago", type: "decimal(10,2)", description: "Valor monetario total, pagado al ejecutivo, integrando las comisiones e incentivos generados por la venta" }
+          - { name: "cuenta_alcance", type: "int", description: "Bandera que indica si la venta contabiliza para el alcance de objetivos y comisiones del ejecutivo que la realiza" }
+          - { name: "port_in", type: "int", description: "Bandera que indica si el cliente al contratar está portando un número telefónico de otra compañía" }
+          - { name: "donador", type: "varchar", length: 50, description: "Operador original que actualmente presta el servicio al número que se desea portar. Es decir, es la compañía telefónica que 'donará' el número al nuevo proveedor" }
+
+      - id: "cuotas_ventas"
+        description: "Registro de cuotas semanales de ventas por tienda y producto para Prime MX"
+        columns:
+          - { name: "id_tienda", type: "int", description: "Identificador único numérico de cada tienda" }
+          - { name: "clave_unica", type: "varchar", length: 20, description: "Clave única de identificación de la Tienda" }
+          - { name: "nombre", type: "varchar", length: 120, description: "Nombre de la Tienda" }
+          - { name: "anio", type: "int", description: "Año para el cual se establece la cuota" }
+          - { name: "mes", type: "int", description: "Mes para el cual se establece la cuota" }
+          - { name: "semana", type: "int", description: "Semana para la cual se establece la cuota" }
+          - { name: "producto", type: "varchar", length: 50, description: "Producto del cual se está estableciendo la cuota" }
+          - { name: "cuota", type: "int", description: "Número de unidades a vender en el periodo, en este caso, semanal" }
+
+        primary_key: ["id_tienda", "anio", "mes", "semana", "producto"]
+
+
+    #Tablas de Contratos
+      - id: "control_contratos"
+        description: "Información relevante de los contratos de arrendamiento de los locales o inmuebles en donde se encuentran las tiendas"
+        columns:
+          - { name: "clave_unica", type: "varchar", length: 20, primary_key: true, description: "Clave única de identificación de la tienda" }
+          - { name: "nombre", type: "varchar", length: 120, description: "Nombre de la tienda" }
+          - { name: "superficie", type: "decimal(10,2)", description: "Superficie total en m2 de la tienda" }
+          - { name: "fecha_vencimiento", type: "date", description: "Fecha en la que expira el contrato de arrendamiento" }
+          - { name: "mercado", type: "varchar", length: 80, description: "Zona geográfica en la que se encuentra ubicada físicamente la tienda" }
+          - { name: "estado_contrato", type: "varchar", length: 120, description: "Estado del proceso de contratación" }
+          - { name: "municipio", type: "varchar", length: 120, description: "Delegación o Municipio en donde se encuentra físicamente la tienda" }
+          - { name: "estado", type: "varchar", length: 50, description: "Estado de la República Mexicana en donde se encuentra ubicada la tienda" }
+          - { name: "fecha_cierre", type: "date", description: "Fecha en que la tienda deja de operar" }
+          - { name: "ceco", type: "varchar", length: 20, description: "Centro de Costos al que están asociados los gastos de la tienda" }
+          - { name: "fecha_contratacion", type: "date", description: "Fecha en la que se inicia la contratación del local comercial en donde se encuentra la tienda" }
+          - { name: "fecha_firma_contrato", type: "date", description: "Fecha en la que se realiza la firma del contrato celebrado entre el arrendador y Prime por el alquiler del local" }
+          - { name: "vigencia", type: "int", description: "Número de meses de duración del contrato de arrendamiento" }
+          - { name: "nombre_arrendador", type: "varchar", length: 200, description: "Nombre de la persona o empresa que arrienda el local en donde se encuentra ubicada la tienda" }
+          - { name: "renta", type: "decimal(12,2)", description: "Valor monetario de la renta mensual del local o inmueble en donde se encuentra la tienda" }
+          - { name: "renta_adelantada", type: "int", description: "Bandera que indica si se debe realizar el pago por adelantado de la renta del local o inmueble" }
+          - { name: "deposito_garantia", type: "int", description: "Bandera que indica si se debe pagar depósito en garantía por la renta del local o inmueble" }
+          - { name: "meses_deposito_garantia", type: "int", description: "Número de meses cuyo valor de renta mensual debe pagarse como depósito en garantía" }
+          - { name: "cantidad_deposito_garantia", type: "decimal(12,2)", description: "Valor monetario del depósito en garantía. Se calcula multiplicando el valor de la renta mensual por el número de meses de depósito" }
+          - { name: "porcentaje_mantenimiento", type: "decimal(10,2)", description: "Valor porcentual de la renta mensual que debe pagarse adicionalmente para el mantenimiento del local" }
+          - { name: "porcentaje_publicidad", type: "decimal(10,2)", description: "Valor porcentual de la renta mensual que deberá pagarse por la publicidad del local o inmueble" }
+
+      - id: "documentacion_contratos"
+        description: "Tabla que indica los documentos que se tienen registrados, relacionados al contrato de arrendamiento del local o inmueble"
+        columns:
+          - { name: "clave_unica", type: "varchar", length: 20, description: "Clave única de identificación de la tienda" }
+          - { name: "nombre", type: "varchar", length: 120, description: "Nombre de la tienda" }
+          - { name: "obligatorio", type: "int", description: "Bandera que indica si el documento es mandatorio para la documentación del contrato" }
+          - { name: "id_tipo_documento_arrendamiento", type: "int", description: "Identificador numérico único del tipo de documento del contrato" }
+          - { name: "documento", type: "varchar", length: 200, description: "Nombre del documento relacionado al contrato de arrendamiento" }
+
+      - id: "catalogo_documentos"
+        description: "Catálogo de definición de los documentos que pueden estar asociados al expediente del contrato de arrendamiento"
+        columns:
+          - { name: "id_tipo_documento_arrendamiento", type: "int", primary_key: true, description: "Identificador numérico único del tipo de documento del contrato" }
+          - { name: "nombre", type: "varchar", length: 200, description: "Nombre del documento asociado al contrato de arrendamiento" }
+          - { name: "obligatorio", type: "int", description: "Bandera que indica si es mandatorio este documento para el expediente del contrato de arrendamiento" }
+          - { name: "status", type: "int", description: "Indica si el registro está activo para ser considerado" }
+
+    #Tablas de Asistencias
+
+      - id: "asistencias"
+        description: "Registro detallado de la asistencia laboral de los empleados en las tiendas Prime MX (distribuidor AT&T)"
+        columns:
+          - { name: "fecha", type: "date", description: "Fecha a la que corresponde la asistencia, justificacion o ausencia" }
+          - { name: "attuid", type: "varchar", length: 15, description: "Identificador único del usuario" }
+          - { name: "numeroEmpleado", type: "int", description: "Numero de empleado asignado al usuario" }
+          - { name: "nombreUsuario", type: "varchar", length: 250, description: "Nombre completo del usuario" }
+          - { name: "puesto", type: "varchar", length: 60, description: "Puesto del Usuario" }
+          - { name: "claveTienda", type: "varchar", length: 20, description: "Clave única de la tienda" }
+          - { name: "nombreTienda", type: "varchar", length: 120, description: "Nombre completo de la tienda" }
+          - { name: "regionPrime", type: "varchar", length: 50, description: "Región o agrupación geográfica de Prime a la que pertenece la tienda" }
+          - { name: "evento", type: "varchar", length: 60, description: "Tipo del evento de la asistencia (Entrada, Salida, Descanso, Descanso Laborado, Sin Asistencia, Otro)" }
+          - { name: "horaEntrada", type: "time", description: "Fecha y Hora del registro de entrada" }
+          - { name: "horaSalida", type: "time", description: "Fecha y Hora del registro de la salida" }
+          - { name: "attuidJustificador", type: "varchar", length: 15, description: "Identificador del usuario que realiza una justificación de inasistencia (si aplica)" }
+          - { name: "justificador", type: "varchar", length: 250, description: "Nombre del usuario que realiza una justificación de inasistencia (si aplica)" }
+          - { name: "fechaJustificacion", type: "datetime", description: "Fecha y hora en la que se realiza la justificación de la ausencia" }
+          - { name: "comentario", type: "varchar", length: 255, description: "Comentario del justificador" }
+    
+    #Tablas de Usuarios
+      - id: "usuarios"
+        description: "Información detallada de los empleados de Prime MX (distribuidor AT&T)"
+        columns:
+          - { name: "attuid", type: "varchar", length: 15, primary_key: true, description: "Identificador único del usuario" }
+          - { name: "nombre", type: "varchar", length: 120, description: "Nombre del Usuario" }
+          - { name: "apellido_paterno", type: "varchar", length: 60, description: "Apellido Paterno del Usuario" }
+          - { name: "apellido_materno", type: "varchar", length: 60, description: "Apellido Materno del Usuario" }
+          - { name: "nombre_completo", type: "varchar", length: 200, generated: true, description: "Nombre completo del usuario (calculado a partir de nombre y apellidos)" }
+          - { name: "genero", type: "varchar", length: 20, description: "Género del Usuario (Masculino, Femenino)" }
+          - { name: "fecha_nacimiento", type: "date", description: "Fecha de nacimiento del Usuario" }
+          - { name: "fecha_contratacion", type: "date", description: "Fecha de firma de contrato laboral con Prime" }
+          - { name: "area", type: "varchar", length: 50, description: "Área de Prime en la que labora el empleado" }
+          - { name: "puesto", type: "varchar", length: 60, description: "Puesto del Empleado" }
+          - { name: "clave_unica", type: "varchar", length: 20, description: "Identificador único de la tienda en donde se encuentra asignado para laborar el empleado" }
+          - { name: "tienda", type: "varchar", length: 120, description: "Nombre de la tienda en donde se encuentra asignado para laborar el empleado" }
+          - { name: "estado_civil", type: "varchar", length: 20, description: "Situación civil del empleado (Soltero, Casado, Unión Libre, etc.)" }
+          - { name: "numero_hijos", type: "int", description: "Cantidad de hijos del empleado" }
+          - { name: "talla", type: "varchar", length: 20, description: "Talla de camiseta del empleado" }
+          - { name: "escolaridad", type: "varchar", length: 30, description: "Grado máximo de estudios del empleado" }
+          - { name: "edad", type: "int", generated: true, description: "Edad del empleado (calculada a partir de la fecha de nacimiento)" }
+          - { name: "antiguedad", type: "int", generated: true, description: "Tiempo en años trabajando en Prime (calculado a partir de la fecha de contratación)" }
+
+    # Definición de relaciones entre tablas
+    relationships:
+    
+      #Relaciones de tablas de Ventas
+      - name: "ventas_cuotas_relacion"
+        description: "Relación entre ventas realizadas y cuotas establecidas para un mismo periodo, tienda y producto"
+        columns:
+          - { table: "ventas", column: ["clave_unica", "anio", "mes", "semana", "producto"] }
+          - { table: "cuotas_ventas", column: ["clave_unica", "anio", "mes", "semana", "producto"] }
+        type: "many_to_one"
+
+    
+      #Relaciones de tablas de Control de Contratos
+      - name: "contrato_documentacion_rel"
+        description: "Relación entre contratos y su documentación a través de la clave única de tienda"
+        columns:
+          - { table: "documentacion_contratos", column: "clave_unica" }
+          - { table: "control_contratos", column: "clave_unica" }
+        type: "many_to_one"
+
+      - name: "documento_catalogo_rel"
+        description: "Relación entre la documentación de contratos y el catálogo de documentos"
+        columns:
+          - { table: "documentacion_contratos", column: "id_tipo_documento_arrendamiento" }
+          - { table: "catalogo_documentos", column: "id_tipo_documento_arrendamiento" }
+        type: "many_to_one"
