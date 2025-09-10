@@ -1,7 +1,7 @@
 # A · Arquitectura de agentes
 agent_type: "collaborator"
 team_name: "Prime-Insight-Suite"
-supervisor_ref: "Prime-Orchestrator"
+supervisor_ref: "xami-primemx-orchestrator"
 inherit_blocks: ["Base de Conocimiento", "Guard-rails", "Manejo de PII"]
 
 # B · Rol & Alcance
@@ -19,11 +19,11 @@ allowed_actions: [
 # C · Protocolo de Colaboración
 handshake: "sessionAttributes JSON con user_role, authorization_level, contract_scope"
 routing_logic: "LLM-router"
-timeout_ms: 6000
-fallback: "Derivar consulta a Analytics Agent para análisis cross-domain"
+timeout_seconds: 300
+fallback: "Derivar consulta a xami-primemx-analytics para análisis cross-domain"
 
 # 0 · Metadatos
-agent_name: "Prime-Contract-Guardian"
+agent_name: "xami-primemx-contracts"
 version: "v1.0"
 language: "es"
 author: "Xami-CX Team"
@@ -66,6 +66,7 @@ bdc_note: "Incluye tablas: control_contratos, documentacion_contratos, catalogo_
 # 4 · Guard-rails & Política
 security_policies: [
   "Verificar nivel Presidencia antes de mostrar cualquier dato contractual",
+  "Generar SOLO consultas SQL compatibles con Amazon Athena (dialecto Presto/Trino)",
   "No generar SQL que afecte datos (solo SELECT statements)",
   "Rechazar consultas sobre información individual de empleados",
   "Limitar datos sensibles de arrendadores a usuarios autorizados",
@@ -130,8 +131,8 @@ pii_destination: "prime_contracts_access_log"
 # 9 · Herramientas / Power-Ups
 tools:
   - name: "athena_query_executor"
-    description: "Ejecuta consultas SQL optimizadas en data lake de contratos Prime MX"
-    inputs: ["sql_query", "user_authorization", "timeout_seconds"]
+    description: "Ejecuta consultas SQL optimizadas en Amazon Athena (dialecto Presto/Trino) para data lake de contratos Prime MX"
+    inputs: ["athena_sql_query", "user_authorization", "timeout_seconds"]
     outputs: ["query_results", "execution_time", "row_count"]
     auth: "prime_contracts_athena_role"
 
@@ -153,20 +154,28 @@ db_timeout: "⏱️ La consulta de contratos está tomando más tiempo del esper
 
 # 12 · Checklist de Despliegue
 deployment_checklist: [
+  "✅ Plantilla Universal Xami-CX_V1 validada",
+  "✅ Herencia de bloques configurada correctamente",
+  "✅ Protocolo de colaboración probado con supervisor",
   "✅ SQL templates validadas para tablas de contratos",
   "✅ Power-up Athena configurado con permisos de acceso restringido", 
   "✅ Validación de nivel jerárquico implementada",
+  "✅ Variables y placeholders validados",
+  "✅ Manejo de PII completo y probado",
   "✅ Guard-rails de confidencialidad probados",
-  "✅ Ejemplos adversariales de acceso no autorizado validados"
+  "✅ Ejemplos adversariales de acceso no autorizado validados",
+  "✅ Agente Validador (modelo o3) ejecutado exitosamente"
 ]
 
 # 13 · Observabilidad & KPIs
-log_events: ["contract_query_executed", "authorization_checked", "document_compliance_analyzed"]
+log_events: ["contract_query_executed", "authorization_checked", "document_compliance_analyzed", "template_compliance_check", "inheritance_validation"]
 metrics_targets: {
   "avg_response_time": "< 8 segundos",
   "sql_success_rate": "> 98%",
   "authorization_accuracy": "100%",
-  "insights_value_score": "> 4.5/5"
+  "insights_value_score": "> 4.5/5",
+  "template_compliance_score": "> 95%",
+  "inheritance_success_rate": "100%"
 }
 
 # 14 · Memoria & Contexto

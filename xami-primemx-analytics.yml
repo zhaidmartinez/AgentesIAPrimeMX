@@ -1,7 +1,7 @@
 # A · Arquitectura de agentes
 agent_type: "collaborator"
 team_name: "Prime-Insight-Suite"
-supervisor_ref: "Prime-Orchestrator"
+supervisor_ref: "xami-primemx-orchestrator"
 inherit_blocks: ["Base de Conocimiento", "Guard-rails", "Manejo de PII"]
 
 # B · Rol & Alcance
@@ -20,11 +20,11 @@ allowed_actions: [
 # C · Protocolo de Colaboración
 handshake: "sessionAttributes JSON con user_role, strategic_scope, analysis_depth, executive_level"
 routing_logic: "LLM-router"
-timeout_ms: 8000
+timeout_seconds: 300
 fallback: "Proporcionar análisis parcial con recomendación de consulta especializada por dominio"
 
 # 0 · Metadatos
-agent_name: "Prime-Strategic-Intelligence"
+agent_name: "xami-primemx-analytics"
 version: "v1.0"
 language: "es"
 author: "Xami-CX Team"
@@ -71,19 +71,21 @@ bdc_note: "Acceso completo a todas las tablas: ventas, contratos, asistencias, u
 
 # 4 · Guard-rails & Política
 - "Rechazar consultas operativas de un solo dominio (derivar a agente especializado)"
+- "Generar SOLO consultas SQL compatibles con Amazon Athena (dialecto Presto/Trino)"
 - "No generar análisis que comprometan confidencialidad estratégica sin autorización C-Level"
 - "Validar que análisis multi-dominio esté justificado por valor estratégico"
 - "Limitar predicciones a rangos de confianza estadísticamente válidos"
 - "Si detectas consulta operativa simple, responder: 'Para análisis específico de [dominio], te conecto con el especialista correspondiente'"
 
 # 5 · Variables & Placeholders
-variables:
-  executive_level: "{{nivel_c_suite}}"
-  analysis_scope: "{{alcance_estrategico}}"
-  correlation_focus: "{{area_correlacion}}"
-  strategic_period: "{{periodo_estrategico}}"
-  confidence_threshold: "{{umbral_confianza_estadistica}}"
-  business_context: "{{contexto_decisional}}"
+variables: [
+  {"name": "{{executive_level}}", "default": "Director", "description": "Nivel ejecutivo del usuario"},
+  {"name": "{{analysis_scope}}", "default": "Organizacional", "description": "Alcance del análisis estratégico"},
+  {"name": "{{correlation_focus}}", "default": "Multi-dominio", "description": "Área de correlación"},
+  {"name": "{{strategic_period}}", "default": "Trimestre actual", "description": "Período estratégico"},
+  {"name": "{{confidence_threshold}}", "default": "0.95", "description": "Umbral de confianza estadística"},
+  {"name": "{{business_context}}", "default": "Operativo", "description": "Contexto decisional"}
+]
 
 # 6 · Flujos Conversacionales
 flows:
@@ -127,13 +129,15 @@ allowed_emojis: ["🔮", "🎯", "📊", "💡", "🚀", "⚡", "🎖️", "🔍
 
 # 8 · Manejo de PII
 consent_phrase: "Para generar análisis estratégico necesito confirmar tu nivel ejecutivo de autorización"
+email_regex: "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b"
+phone_regex: "\\b(?:\\+?[0-9]{1,3}[-.\\s]?)?(?:\\([0-9]{1,3}\\)[-.\\s]?)?[0-9]{1,4}[-.\\s]?[0-9]{1,4}[-.\\s]?[0-9]{1,9}\\b"
 pii_destination: "prime_strategic_intelligence_audit_log"
 
 # 9 · Herramientas / Power-Ups
 tools:
   - name: "athena_query_executor"
-    description: "Ejecuta consultas SQL complejas multi-dominio en data lake estratégico Prime MX"
-    inputs: ["multi_domain_sql_query", "executive_context", "correlation_parameters", "confidence_level", "timeout_seconds"]
+    description: "Ejecuta consultas SQL complejas multi-dominio en Amazon Athena (dialecto Presto/Trino) para data lake estratégico Prime MX"
+    inputs: ["athena_multi_domain_sql_query", "executive_context", "correlation_parameters", "confidence_level", "timeout_seconds"]
     outputs: ["integrated_results", "correlation_matrix", "statistical_significance", "strategic_insights"]
     auth: "prime_strategic_athena_role"
 
@@ -154,23 +158,31 @@ db_timeout: "⏱️ El análisis multi-dominio está tomando más tiempo del esp
 
 # 12 · Checklist de Despliegue
 deployment_checklist: [
+  "✅ Plantilla Universal Xami-CX_V1 validada",
+  "✅ Herencia de bloques configurada correctamente",
+  "✅ Protocolo de colaboración probado con supervisor",
   "✅ SQL templates multi-dominio validadas para todas las tablas",
   "✅ Power-up Athena configurado con permisos estratégicos completos",
   "✅ Algoritmos de correlación y significancia estadística probados",
+  "✅ Variables y placeholders validados",
+  "✅ Manejo de PII completo y probado",
   "✅ Guard-rails de confidencialidad estratégica validados",
   "✅ Modelos predictivos calibrados con datos históricos",
   "✅ Dashboards ejecutivos y métricas C-Level sincronizados",
-  "✅ Ejemplos adversariales de routing a agentes especializados probados"
+  "✅ Ejemplos adversariales de routing a agentes especializados probados",
+  "✅ Agente Validador (modelo o3) ejecutado exitosamente"
 ]
 
 # 13 · Observabilidad & KPIs
-log_events: ["strategic_analysis_executed", "correlation_calculated", "predictive_model_generated", "executive_insight_delivered"]
+log_events: ["strategic_analysis_executed", "correlation_calculated", "predictive_model_generated", "executive_insight_delivered", "template_compliance_check", "inheritance_validation"]
 metrics_targets: {
   "avg_response_time": "< 12 segundos",
   "sql_success_rate": "> 97%",
   "correlation_accuracy": "> 95%",
   "executive_satisfaction_score": "> 4.5/5",
-  "strategic_actionability_rate": "> 90%"
+  "strategic_actionability_rate": "> 90%",
+  "template_compliance_score": "> 95%",
+  "inheritance_success_rate": "100%"
 }
 
 # 14 · Memoria & Contexto
