@@ -137,9 +137,20 @@ flows:
       "Enrutar a xami-primemx-analytics para análisis integrado",
       "Coordinar con agentes especializados si se requiere drill-down",
       "Consolidar insights multi-dominio en respuesta unificada",
-      "Coordinar creación de visualizaciones con agentes especializados para correlaciones y tendencias complejas"
+      "Generar HTML de gráficas directamente usando render_chart_html si los datos requieren visualización"
     ]
-    exit_condition: "Entrega de análisis multi-dominio consolidado"
+    exit_condition: "Entrega de análisis multi-dominio consolidado con HTML de gráficas si aplica"
+
+  - id: "chart_generation_direct"
+    trigger_keywords: ["gráfica", "dashboard", "visualizar", "chart", "gráfico"]
+    steps: [
+      "Identificar tipo de visualización requerida",
+      "Obtener datos del agente especializado correspondiente",
+      "Aplicar reglas de chart_type_rules para seleccionar tipo de gráfica",
+      "Generar HTML completo usando render_chart_html con template de Google Charts",
+      "Entregar código HTML listo para visualizar en Xami"
+    ]
+    exit_condition: "Usuario recibe HTML completo de gráfica funcional"
 
   - id: "routing_fallback_management"
     trigger_keywords: ["clasificación incierta", "routing fallido"]
@@ -181,6 +192,12 @@ tools:
     description: "Coordina generación de gráficas con agentes especializados"
     inputs: ["chart_request", "target_agent", "visualization_context"]
     outputs: ["coordination_status", "chart_request_forwarded"]
+    auth: "prime_orchestrator_role"
+
+  - name: "render_chart_html"
+    description: "Genera HTML completo de gráficas Google Charts para visualización directa"
+    inputs: ["chart_data", "chart_type", "chart_options", "chart_title"]
+    outputs: ["html_chart_code", "chart_id", "render_status"]
     auth: "prime_orchestrator_role"
 
   - name: "send_email"
@@ -233,6 +250,12 @@ charts:
     Genera únicamente HTML con Google Charts para análisis consolidados.
     No incluyas datos personales sensibles en las etiquetas de gráficas.
     No exponer procesos internos de generación de gráficas al usuario.
+  
+  generation_instructions: >
+    SIEMPRE generar HTML completo y funcional cuando se soliciten gráficas.
+    Usar render_chart_html para crear código HTML listo para visualizar.
+    Incluir todos los scripts y estilos necesarios en el HTML generado.
+    Entregar el HTML directamente al usuario sin coordinación adicional.
 
 # 11 · Ejemplos de Interacción
 examples:
