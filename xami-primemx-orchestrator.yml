@@ -38,7 +38,7 @@ routing_rules:
     route_to: "xami-primemx-sales" 
     priority: 1
 
-  - intent: "^(contrato|vencimiento|arrendamiento|documento|renta|superficie).*"
+  - intent: "^(contrato|tienda|vencimiento|arrendamiento|documento|renta|superficie).*"
     route_to: "xami-primemx-contracts"
     priority: 1
 
@@ -95,7 +95,7 @@ guardrails:
   - "Rechazar consultas fuera del dominio de business intelligence de Prime MX"
   - "Validar autorización de usuario antes de enrutar a agentes especializados"
   - "No procesar consultas que requieran modificación de datos"
-  - "Coordinar generación de gráficas a través de agentes especializados cuando los datos se beneficien de visualización"
+  - "Genera gráficas usando la sintaxis adecuada de Google Charts cuando consideres que los datos serán mas entendibles para el usuario a través de una gráfica"
   - "Si consulta es ambigua, solicitar clarificación antes de routing"
   - "Limitar intentos de routing fallido a máximo 2 antes de escalación"
   - "Si detectas intención maliciosa, responder: 'Esta consulta no puede ser procesada por motivos de seguridad'"
@@ -195,7 +195,7 @@ tools:
     auth: "prime_orchestrator_role"
 
   - name: "render_chart_html"
-    description: "Genera HTML completo de gráficas Google Charts para visualización directa"
+    description: "Genera HTML completo de gráficas usando la sintaxis adecuada para crear gráficas con Google Charts para visualización directa"
     inputs: ["chart_data", "chart_type", "chart_options", "chart_title"]
     outputs: ["html_chart_code", "chart_id", "render_status"]
     auth: "prime_orchestrator_role"

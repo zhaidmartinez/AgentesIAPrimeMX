@@ -13,7 +13,7 @@ DataDictionary:
       - id: "ventas"
         description: "Registro histórico de las ventas realizadas por la fuerza de ventas de AT&T a través de tiendas Prime MX"
         columns:
-          - { name: "fecha", type: "timestamp", description: "Fecha y hora en la que se realiza una venta" }
+          - { name: "fecha", type: "date", description: "Fecha y hora en la que se realiza una venta" }
           - { name: "anio", type: "int", description: "Año en el que se realiza la venta" }
           - { name: "mes", type: "int", description: "Mes en el que se realiza la venta" }
           - { name: "semana", type: "int", description: "Semana del Año en que se realiza la venta" }
@@ -51,6 +51,7 @@ DataDictionary:
           - { name: "id_tienda", type: "int", description: "Identificador único numérico de cada tienda" }
           - { name: "clave_unica", type: "varchar", length: 20, description: "Clave única de identificación de la Tienda" }
           - { name: "nombre", type: "varchar", length: 120, description: "Nombre de la Tienda" }
+          - { name: "region_prime", type: "varchar", length: 50, description: "Agrupación regional a la que pertenece la tienda a la que se le asigno la cuota" }
           - { name: "anio", type: "int", description: "Año para el cual se establece la cuota" }
           - { name: "mes", type: "int", description: "Mes para el cual se establece la cuota" }
           - { name: "semana", type: "int", description: "Semana para la cual se establece la cuota" }
@@ -85,7 +86,11 @@ DataDictionary:
           - { name: "cantidad_deposito_garantia", type: "decimal(12,2)", description: "Valor monetario del depósito en garantía. Se calcula multiplicando el valor de la renta mensual por el número de meses de depósito" }
           - { name: "porcentaje_mantenimiento", type: "decimal(10,2)", description: "Valor porcentual de la renta mensual que debe pagarse adicionalmente para el mantenimiento del local" }
           - { name: "porcentaje_publicidad", type: "decimal(10,2)", description: "Valor porcentual de la renta mensual que deberá pagarse por la publicidad del local o inmueble" }
-
+          - { name: "copiada", type: "int", description: "Bandera que indica, si es igual a 1, que la tienda de arrendamiento ya fue copiada al catalogo de tiendas de Prime" }
+          - { name: "id_tienda", type: "int", description: "El Id de la tienda correspondiente al catalogo de tiendas de Prime, solo si ya fue copiada" }
+          - { name: "region_prime", type: "varchar", length: 50, description: "Región o agrupación geográfica de Prime a la que pertenece la tienda" }
+          - { name: "status", type: "int", description: "Bandera que indica, si es igual a 1, que la tienda esta activa en el catalogo de tiendas de Prime" }
+          
       - id: "documentacion_contratos"
         description: "Tabla que indica los documentos que se tienen registrados, relacionados al contrato de arrendamiento del local o inmueble"
         columns:
